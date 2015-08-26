@@ -1,6 +1,6 @@
 <?php
 
-namespace Listerical\PackBundle\Form;
+namespace Listerical\PackBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

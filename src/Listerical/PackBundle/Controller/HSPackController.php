@@ -95,7 +95,7 @@ class HSPackController extends Controller
         }
     }
 
-    public function addCardToPack($cardname, HSPack $pack, $golden = false) {
+    private function addCardToPack($cardname, HSPack $pack, $golden = false) {
         $em = $this->getDoctrine()->getManager();
         $card = $this->getDoctrine()->getRepository('ListericalPackBundle:HSCard')->find($cardname);
 

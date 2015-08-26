@@ -70,13 +70,7 @@ class HSCollectionRepository extends EntityRepository
         }
     }
     public function findOpenedPacks() {
-        /*
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('count(P)');
-        $qb->from('ListericalPackBundle:HSPack','P');
-        $qb->join('P.cards','C');
-        $qb->where($qb->expr()->isNotNull('P.cards'));
-*/
+
         $qs = "SELECT count(DISTINCT P) FROM ListericalPackBundle:HSPack P LEFT JOIN P.cards C WHERE C IS NOT NULL ";
         $query = $this->getEntityManager()->createQuery($qs);
 
