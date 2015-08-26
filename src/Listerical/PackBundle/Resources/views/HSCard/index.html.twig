@@ -1,0 +1,73 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>HSCard list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Cardid</th>
+                <th>Name</th>
+                <th>Cardset</th>
+                <th>Type</th>
+                <th>Faction</th>
+                <th>Rarity</th>
+                <th>Cost</th>
+                <th>Attack</th>
+                <th>Health</th>
+                <th>Text</th>
+                <th>Flavor</th>
+                <th>Artist</th>
+                <th>Collectible</th>
+                <th>Elite</th>
+                <th>Img</th>
+                <th>Imggold</th>
+                <th>Locale</th>
+                <th>Mechanics</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('hscard_show', { 'id': entity.cardId }) }}">{{ entity.cardId }}</a></td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.cardSet }}</td>
+                <td>{{ entity.type }}</td>
+                <td>{{ entity.faction }}</td>
+                <td>{{ entity.rarity }}</td>
+                <td>{{ entity.cost }}</td>
+                <td>{{ entity.attack }}</td>
+                <td>{{ entity.health }}</td>
+                <td>{{ entity.text }}</td>
+                <td>{{ entity.flavor }}</td>
+                <td>{{ entity.artist }}</td>
+                <td>{{ entity.collectible }}</td>
+                <td>{{ entity.elite }}</td>
+                <td>{{ entity.img }}</td>
+                <td>{{ entity.imgGold }}</td>
+                <td>{{ entity.locale }}</td>
+                <td>{{ entity.mechanics }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('hscard_show', { 'id': entity.cardId }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('hscard_edit', { 'id': entity.cardId }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('hscard_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

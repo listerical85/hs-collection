@@ -1,0 +1,15 @@
+{% extends "@ListericalPack/layout.html.twig" %}
+{% set menu_selected = 'statistics' %}
+{% block title %}Statistics{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <h1>Statistics</h1>
+    </div>
+    <ul class="list-group">
+    {% for name, amount in cards %}
+        <li class="list-group-item"><span class="badge">{{ amount }}</span>{{ name|capitalize }}</li>
+    {% endfor %}
+        <li class="list-group-item"><span class="badge">{{ openedPacks }}</span>Aantal geopend</li>
+        <li class="list-group-item">Meest geopend: <strong>{{ mostOpened.0.card.name }}</strong></li>
+    </ul>
+{% endblock %}

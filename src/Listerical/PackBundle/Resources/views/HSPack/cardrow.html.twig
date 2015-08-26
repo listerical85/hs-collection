@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col col-xs-9">
+        <autocomplete ng-model="card{{ i }}" data="cards" on-type="updateCards" on-select="selectedCard{{ i }}"></autocomplete>
+        <input name="card{{ i }}" type="hidden" value="{{ '{{ fullCard'~i~'.cardId }}' }}"/>
+    </div>
+    <div class="col col-xs-3">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="goldenc{{ i }}" value="true">
+                Golden?
+            </label>
+        </div>
+    </div>
+</div>

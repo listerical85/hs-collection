@@ -1,0 +1,38 @@
+{% extends "::base.html.twig" %}
+{% block meta %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+{% block stylesheets %}
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+
+    {% stylesheets "@ListericalPackBundle/Resources/public/css/style.css" %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+{% endblock %}
+{% block javascripts %}
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    {% javascripts
+    "@ListericalPackBundle/Resources/public/js/angular.min.js"
+    "@ListericalPackBundle/Resources/public/js/autocomplete.js"
+    "@ListericalPackBundle/Resources/public/js/hspack.app.js"
+    %}
+    <script type="application/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        {% include "@ListericalPack/nav.html.twig" %}
+    {% block content %}
+    {% endblock %}
+    </div>
+{% endblock %}

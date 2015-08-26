@@ -1,0 +1,32 @@
+{% extends "@ListericalPack/layout.html.twig" %}
+{% set menu_selected = 'detail' %}
+{% block title %}You've opened a new pack!{% endblock %}
+{% block content %}
+<div ng-app="hsApp">
+    <div class="page-header">
+        <h1>You've opened a new pack!</h1>
+    </div>
+    <p>Add your cards</p>
+    <div ng-controller="HsCtrl">
+        <form action="{{ path('save_pack') }}" method="post">
+            <input name="id" type="hidden" value="{{ pack.id }}"/>
+            {% for i in 1..5 %}
+                {% include "@ListericalPack/HSPack/cardrow.html.twig" %}
+            {% endfor %}
+            <div class="row">
+                <div class="col col-xs-1"></div>
+                <div class="col col-xs-2"><img class="img-responsive" ng-src="{{ '{{ card1Img }}' }}" ng-show="fullCard1" src="" alt=""/></div>
+                <div class="col col-xs-2"><img class="img-responsive" ng-src="{{ '{{ card2Img }}' }}" ng-show="fullCard2" src="" alt=""/></div>
+                <div class="col col-xs-2"><img class="img-responsive" ng-src="{{ '{{ card3Img }}' }}" ng-show="fullCard3" src="" alt=""/></div>
+                <div class="col col-xs-2"><img class="img-responsive" ng-src="{{ '{{ card4Img }}' }}" ng-show="fullCard4" src="" alt=""/></div>
+                <div class="col col-xs-2"><img class="img-responsive" ng-src="{{ '{{ card5Img }}' }}" ng-show="fullCard5" src="" alt=""/></div>
+            </div>
+
+            <div class="row">
+                <div class="col col-xs-12"><input class="btn btn-default" type="submit" name="submit" value="Save pack"/></div>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
