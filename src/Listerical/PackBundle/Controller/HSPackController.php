@@ -31,7 +31,8 @@ class HSPackController extends Controller
         if ($pack)
         {
             return array(
-                'pack' => $pack
+                'pack' => $pack,
+                'mashape' => $this->getParameter('mashape')
             );
         } else {
             $pack = $this->getDoctrine()->getRepository('ListericalPackBundle:HSPack')->findOpenPack();
@@ -101,7 +102,7 @@ class HSPackController extends Controller
         if (!$card) {
             $plaincard = \Unirest\Request::get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/".$cardname,
                 array(
-                    "X-Mashape-Key" => "Vrba0s0FtdmshgtdUHqlXgg7HSRlp1bROeNjsn3zaudcxA4MYm",
+                    "X-Mashape-Key" => $this->getParameter('mashape'),
                     "Accept" => "application/json"
                 )
             );

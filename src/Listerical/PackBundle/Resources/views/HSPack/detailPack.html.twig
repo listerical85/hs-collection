@@ -10,6 +10,7 @@
     <div ng-controller="HsCtrl">
         <form action="{{ path('save_pack') }}" method="post">
             <input name="id" type="hidden" value="{{ pack.id }}"/>
+            <input name="mashape" type="hidden" ng-model="mashape" ng-init="mashape = '{{ mashape }}'" value="{{ mashape }}"/>
             {% for i in 1..5 %}
                 {% include "@ListericalPack/HSPack/cardrow.html.twig" %}
             {% endfor %}

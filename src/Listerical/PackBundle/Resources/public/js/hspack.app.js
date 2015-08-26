@@ -1,9 +1,8 @@
 var hsApp = angular.module('hsApp', ['autocomplete']);
 hsApp.factory('CardRetriever',function($http, $q){
     var CardRetriever = new Object();
-    CardRetriever.getcards = function(i) {
+    CardRetriever.getcards = function(apikey, i) {
         var url = 'https://omgvamp-hearthstone-v1.p.mashape.com/cards/search/'+i+'?collectible=1';
-        var apikey = 'N5oK5FggocmshCarInY9koBssJwsp1ZAUzXjsnhkFyCOvxFcet';
         var carddata = $q.defer();
         $http.get(url,{headers:{'X-Mashape-Key':apikey}}).success(function(result){
             carddata.resolve(result);
@@ -26,7 +25,7 @@ hsApp.controller('HsCtrl', function($scope, CardRetriever){
     $scope.card5Img = null;
 
     $scope.updateCards = function(typed) {
-        $scope.newcards = CardRetriever.getcards(typed);
+        $scope.newcards = CardRetriever.getcards($scope.mashape, typed);
         $scope.newcards.then(function(data){
 
             var cards = new Array();
@@ -37,7 +36,7 @@ hsApp.controller('HsCtrl', function($scope, CardRetriever){
         });
     },
     $scope.selectedCard1 = function(selection){
-        card = CardRetriever.getcards(selection);
+        card = CardRetriever.getcards($scope.mashape, selection);
         card.then(function(card){
             if(card[0]){
                 $scope.fullCard1 = card[0];
@@ -46,7 +45,7 @@ hsApp.controller('HsCtrl', function($scope, CardRetriever){
         });
     },
     $scope.selectedCard2 = function(selection){
-        card = CardRetriever.getcards(selection);
+        card = CardRetriever.getcards$scope.mashape, (selection);
         card.then(function(card){
             if(card[0]) {
                 $scope.fullCard2 = card[0];
@@ -56,7 +55,7 @@ hsApp.controller('HsCtrl', function($scope, CardRetriever){
 
     },
     $scope.selectedCard3 = function(selection){
-        card = CardRetriever.getcards(selection);
+        card = CardRetriever.getcards($scope.mashape, selection);
         card.then(function(card){
             if(card[0]) {
                 $scope.fullCard3 = card[0];
@@ -66,7 +65,7 @@ hsApp.controller('HsCtrl', function($scope, CardRetriever){
         });
     },
     $scope.selectedCard4 = function(selection){
-        card = CardRetriever.getcards(selection);
+        card = CardRetriever.getcards($scope.mashape, selection);
         card.then(function(card){
             if(card[0]) {
                 $scope.fullCard4 = card[0];
@@ -76,7 +75,7 @@ hsApp.controller('HsCtrl', function($scope, CardRetriever){
 
     },
     $scope.selectedCard5 = function(selection){
-        card = CardRetriever.getcards(selection);
+        card = CardRetriever.getcards($scope.mashape, selection);
         card.then(function(card){
             if(card[0]) {
                 $scope.fullCard5 = card[0];
