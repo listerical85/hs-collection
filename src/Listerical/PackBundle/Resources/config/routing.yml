@@ -1,1 +1,12 @@
-
+listerical_card:
+    resource: "@ListericalPackBundle/Controller/HSCardController.php"
+    prefix:   /
+    type:     annotation
+listerical_pack:
+    resource: "@ListericalPackBundle/Controller/HSPackController.php"
+    prefix:   /
+    type:     annotation
+listerical_collection:
+    resource: "@ListericalPackBundle/Controller/HSCollectionController.php"
+    prefix:   /
+    type:     annotation

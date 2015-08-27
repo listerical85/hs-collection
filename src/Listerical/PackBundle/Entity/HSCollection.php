@@ -33,6 +33,12 @@ class HSCollection
     private $pack;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Listerical\PackBundle\Entity\HSUser", inversedBy="cards")
+     * @ORM\JoinColumn(name="openedBy", referencedColumnName="id")
+     */
+    private $openedBy;
+
+    /**
      * @ORM\Column(name="golden", type="boolean")
      */
     private $golden;
@@ -114,5 +120,28 @@ class HSCollection
     public function getPack()
     {
         return $this->pack;
+    }
+
+    /**
+     * Set openedBy
+     *
+     * @param \Listerical\PackBundle\Entity\HSUser $openedBy
+     * @return HSCollection
+     */
+    public function setOpenedBy(\Listerical\PackBundle\Entity\HSUser $openedBy = null)
+    {
+        $this->openedBy = $openedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get openedBy
+     *
+     * @return \Listerical\PackBundle\Entity\HSUser 
+     */
+    public function getOpenedBy()
+    {
+        return $this->openedBy;
     }
 }

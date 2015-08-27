@@ -7,11 +7,12 @@ use Doctrine\ORM\EntityRepository;
 
 class HSPackRepository extends EntityRepository
 {
-    public function findOpenPack() {
+    public function findOpenPack($user) {
 
-        $qs = "SELECT P FROM ListericalPackBundle:HSPack P LEFT JOIN P.cards C WHERE C IS NULL ";
+        $qs = "SELECT P FROM ListericalPackBundle:HSPack P LEFT JOIN P.cards C WHERE C IS NULL AND P.openedBy = :user";
+
         $query = $this->getEntityManager()->createQuery($qs);
-
-        return $query->getSingleResult();
+        $query->setParameter(':user',$user);
+        return $query->getOneOrNullResult();
     }
 }

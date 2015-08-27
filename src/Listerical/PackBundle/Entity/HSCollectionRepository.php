@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 
 class HSCollectionRepository extends EntityRepository
 {
-    public function findByClass($class = null, $returnCount = false) {
+    public function findByClass($user, $class = null, $returnCount = false) {
         //Null = neutral
         $qb = $this->createQueryBuilder('C');
         if ($returnCount) {
@@ -23,14 +23,15 @@ class HSCollectionRepository extends EntityRepository
         } else {
             $qb->andWhere($qb->expr()->isNull('Cr.playerClass'));
         }
-
+        $qb->andWhere($qb->expr()->eq('C.openedBy',':user'));
+        $qb->setParameter(':user',$user);
         if ($returnCount) {
             return $qb->getQuery()->getSingleScalarResult();
         } else {
             return $qb->getQuery()->getResult();
         }
     }
-    public function findByGolden($isGolden = true, $returnCount = false) {
+    public function findByGolden($user, $isGolden = true, $returnCount = false) {
         $qb = $this->createQueryBuilder('C');
         if ($returnCount) {
             $qb->select('count(C)');
@@ -39,7 +40,9 @@ class HSCollectionRepository extends EntityRepository
         }
         $qb->join('C.card','Cr');
         $qb->andWhere($qb->expr()->eq('C.golden',':isGolden'));
+        $qb->andWhere($qb->expr()->eq('C.openedBy',':user'));
         $qb->setParameter(':isGolden',$isGolden);
+        $qb->setParameter(':user',$user);
 
         if ($returnCount) {
             return $qb->getQuery()->getSingleScalarResult();
@@ -48,7 +51,7 @@ class HSCollectionRepository extends EntityRepository
         }
 
     }
-    public function findByType($type, $returnCount = false) {
+    public function findByType($user, $type, $returnCount = false) {
 
         $qb = $this->createQueryBuilder('C');
         if ($returnCount) {
@@ -60,7 +63,9 @@ class HSCollectionRepository extends EntityRepository
         $qb->join('C.card','Cr');
 
         $qb->andWhere($qb->expr()->eq('Cr.rarity',':type'));
+        $qb->andWhere($qb->expr()->eq('C.openedBy',':user'));
         $qb->setParameter(':type',$type);
+        $qb->setParameter(':user',$user);
 
 
         if ($returnCount) {
@@ -69,22 +74,24 @@ class HSCollectionRepository extends EntityRepository
             return $qb->getQuery()->getResult();
         }
     }
-    public function findOpenedPacks() {
+    public function findOpenedPacks($user) {
 
-        $qs = "SELECT count(DISTINCT P) FROM ListericalPackBundle:HSPack P LEFT JOIN P.cards C WHERE C IS NOT NULL ";
+        $qs = "SELECT count(DISTINCT P) FROM ListericalPackBundle:HSPack P LEFT JOIN P.cards C WHERE C IS NOT NULL AND P.openedBy = :user ";
         $query = $this->getEntityManager()->createQuery($qs);
+        $query->setParameter(':user',$user);
 
 
-        return $query->getSingleScalarResult();
+        return $query->getOneOrNullResult();
 
     }
-    public function findMostOpenedCard() {
+    public function findMostOpenedCard($user) {
         $qb = $this->createQueryBuilder('C');
         $qb->select('count(C.card) as amount','C');
         $qb->join('C.card','Cr');
         $qb->groupBy('C.card');
         $qb->orderBy('amount','DESC');
-
+        $qb->andWhere($qb->expr()->eq('C.openedBy',':user'));
+        $qb->setParameter(':user',$user);
         $return = $qb->getQuery()->getResult();
 
         return (isset($return[0]) ? $return[0] : null);

@@ -15,27 +15,29 @@ class HSCollectionController extends Controller
     public function statisticsAction()
     {
         $repo = $this->getDoctrine()->getRepository('ListericalPackBundle:HSCollection');
-        $cards['druid']     = $repo->findByClass('druid',true);
-        $cards['hunter']    = $repo->findByClass('hunter',true);
-        $cards['mage']      = $repo->findByClass('mage',true);
-        $cards['paladin']   = $repo->findByClass('paladin',true);
-        $cards['priest']    = $repo->findByClass('priest',true);
-        $cards['rogue']     = $repo->findByClass('rogue',true);
-        $cards['shaman']    = $repo->findByClass('shaman',true);
-        $cards['warlock']   = $repo->findByClass('warlock',true);
-        $cards['warrior']   = $repo->findByClass('warrior',true);
-        $cards['neutral']   = $repo->findByClass(null,true);
+        $user = $this->getUser();
+        $cards['druid']     = $repo->findByClass($user,'druid',true);
+        $cards['hunter']    = $repo->findByClass($user,'hunter',true);
+        $cards['mage']      = $repo->findByClass($user,'mage',true);
+        $cards['paladin']   = $repo->findByClass($user,'paladin',true);
+        $cards['priest']    = $repo->findByClass($user,'priest',true);
+        $cards['rogue']     = $repo->findByClass($user,'rogue',true);
+        $cards['shaman']    = $repo->findByClass($user,'shaman',true);
+        $cards['warlock']   = $repo->findByClass($user,'warlock',true);
+        $cards['warrior']   = $repo->findByClass($user,'warrior',true);
+        $cards['neutral']   = $repo->findByClass($user,null,true);
 
-        $cards['golden']    = $repo->findByGolden(true,true);
+        $cards['golden']    = $repo->findByGolden($user,true,true);
 
-        $cards['common']    = $repo->findByType('common',true);
-        $cards['rare']      = $repo->findByType('rare',true);
-        $cards['epic']      = $repo->findByType('epic',true);
-        $cards['legendary'] = $repo->findByType('legendary',true);
+        $cards['common']    = $repo->findByType($user,'common',true);
+        $cards['rare']      = $repo->findByType($user,'rare',true);
+        $cards['epic']      = $repo->findByType($user,'epic',true);
+        $cards['legendary'] = $repo->findByType($user,'legendary',true);
 
-        $mostOpened         = $repo->findMostOpenedCard();
+        $mostOpened         = $repo->findMostOpenedCard($user);
 
-        $openedPacks        = $repo->findOpenedPacks();
+        $openedPacks        = $repo->findOpenedPacks($user);
+        if($openedPacks !== null)$openedPacks = $openedPacks[1];
 
         return array('cards'=>$cards, 'mostOpened'=>$mostOpened,'openedPacks'=>$openedPacks);
 

@@ -8,7 +8,10 @@ use Listerical\PackBundle\Entity\HSPack;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class HSPackController extends Controller
 {
@@ -18,29 +21,29 @@ class HSPackController extends Controller
      */
     public function listPacksAction()
     {
-        return array(// ...
-        );
+        return $this->redirectToRoute('statistics');
     }
 
     /**
-     * @Route("/detailPack/{pack}", name="hspack_detail")
+     * @Route("/detailPack/{pack}", name="hspack_detail", options={"expose":true})
      * @Template()
      */
     public function detailPackAction(HSPack $pack = null)
     {
-        if ($pack)
+        if ($pack && $pack->getOpenedBy() == $this->getUser())
         {
             return array(
                 'pack' => $pack,
                 'mashape' => $this->getParameter('mashape')
             );
         } else {
-            $pack = $this->getDoctrine()->getRepository('ListericalPackBundle:HSPack')->findOpenPack();
+            $pack = $this->getDoctrine()->getRepository('ListericalPackBundle:HSPack')->findOpenPack($this->getUser());
             if ($pack) {
                 return $this->redirectToRoute('hspack_detail',array('pack'=>$pack->getId()));
             }
             $pack = new HSPack();
             $pack->setOpenedOn(new \DateTime());
+            $pack->setOpenedBy($this->getUser());
             $em = $this->getDoctrine()->getManager();
             $em->persist($pack);
             $em->flush();
@@ -50,8 +53,7 @@ class HSPackController extends Controller
     }
 
     /**
-     * @Route("/savepack", name="save_pack")
-     * @Template()
+     * @Route("/savepack", name="save_pack", options={"expose":true})
      */
     public function savePackAction(Request $request)
     {
@@ -75,16 +77,21 @@ class HSPackController extends Controller
                     }
                 }
                 $pack->setOpenedOn(new \DateTime());
-                $pack = $this->addCardToPack($request->get('card1'), $pack, $request->request->has('goldenc1'));
-                $pack = $this->addCardToPack($request->get('card2'), $pack, $request->request->has('goldenc2'));
-                $pack = $this->addCardToPack($request->get('card3'), $pack, $request->request->has('goldenc3'));
-                $pack = $this->addCardToPack($request->get('card4'), $pack, $request->request->has('goldenc4'));
-                $pack = $this->addCardToPack($request->get('card5'), $pack, $request->request->has('goldenc5'));
+                $pack = $this->addCardToPack($request->request->get('card1'), $pack, $request->request->has('goldenc1'));
+                $pack = $this->addCardToPack($request->request->get('card2'), $pack, $request->request->has('goldenc2'));
+                $pack = $this->addCardToPack($request->request->get('card3'), $pack, $request->request->has('goldenc3'));
+                $pack = $this->addCardToPack($request->request->get('card4'), $pack, $request->request->has('goldenc4'));
+                $this->addCardToPack($request->request->get('card5'), $pack, $request->request->has('goldenc5'));
 
 
                 $em->flush();
-
-                return $this->redirectToRoute('hspack_detail',array('pack'=>0));
+                return new JsonResponse(
+                    array(
+                        'success' => true,
+                        'url' => $this->generateUrl('hspack_detail',array('pack'=>0))
+                    )
+                );
+                //return $this->redirectToRoute('hspack_detail',array('pack'=>0));
 
 
             }
@@ -92,7 +99,9 @@ class HSPackController extends Controller
 
         }else{
             //Throw error
+            throw new NotFoundHttpException("Pack not found");
         }
+
     }
 
     private function addCardToPack($cardname, HSPack $pack, $golden = false) {
@@ -100,12 +109,13 @@ class HSPackController extends Controller
         $card = $this->getDoctrine()->getRepository('ListericalPackBundle:HSCard')->find($cardname);
 
         if (!$card) {
-            $plaincard = \Unirest\Request::get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/".$cardname,
+            $plaincard = \Unirest::get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/".$cardname,
                 array(
                     "X-Mashape-Key" => $this->getParameter('mashape'),
                     "Accept" => "application/json"
                 )
             );
+
             $plaincard = $plaincard->body[0];
             $postdata = get_object_vars($plaincard);
             $card = new HSCard();
@@ -125,6 +135,7 @@ class HSPackController extends Controller
         $collection = new HSCollection();
         $collection->setPack($pack);
         $collection->setCard($card);
+        $collection->setOpenedBy($this->getUser());
         if ($golden) {
             $collection->setGolden(true);
         } else {
@@ -134,7 +145,7 @@ class HSPackController extends Controller
         $em->persist($collection);
         $em->flush($collection);
 
-        $pack->addCard($card);
+
         return $pack;
     }
 }

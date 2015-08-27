@@ -1,0 +1,5 @@
+layout.login: Login
+security.login.username: Gebruikersnaam
+security.login.password: Wachtwoord
+security.login.remember_me: Onthoud mij
+security.login.submit: Login

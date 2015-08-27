@@ -22,6 +22,12 @@ class HSPack
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Listerical\PackBundle\Entity\HSUser", inversedBy="packs")
+     * @ORM\JoinColumn(name="openedBy", referencedColumnName="id")
+     */
+    private $openedBy;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="openedOn", type="datetime")
@@ -107,5 +113,28 @@ class HSPack
     public function getCards()
     {
         return $this->cards;
+    }
+
+    /**
+     * Set openedBy
+     *
+     * @param \Listerical\PackBundle\Entity\HSUser $openedBy
+     * @return HSPack
+     */
+    public function setOpenedBy(\Listerical\PackBundle\Entity\HSUser $openedBy = null)
+    {
+        $this->openedBy = $openedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get openedBy
+     *
+     * @return \Listerical\PackBundle\Entity\HSUser 
+     */
+    public function getOpenedBy()
+    {
+        return $this->openedBy;
     }
 }

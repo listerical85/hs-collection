@@ -10,6 +10,6 @@
         <li class="list-group-item"><span class="badge">{{ amount }}</span>{{ name|capitalize }}</li>
     {% endfor %}
         <li class="list-group-item"><span class="badge">{{ openedPacks }}</span>Aantal geopend</li>
-        <li class="list-group-item">Meest geopend: <strong>{{ mostOpened.0.card.name }}</strong></li>
+        <li class="list-group-item">Meest geopend: <strong>{{ mostOpened ? mostOpened.0.card.name }}</strong></li>
     </ul>
 {% endblock %}

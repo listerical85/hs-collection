@@ -14,6 +14,7 @@
             <ul class="nav navbar-nav">
                 <li class="{{ menu_selected|default('')=='detail'  ? 'active' }}"><a href="{{ path('hspack_detail',{pack:0}) }}">New pack!</a></li>
                 <li class="{{ menu_selected|default('')=='statistics'  ? 'active' }}"><a href="{{ path('statistics') }}">Statistics</a></li>
+                <li class="bg-danger"><a href="{{ path('fos_user_security_logout') }}">Uitloggen</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
