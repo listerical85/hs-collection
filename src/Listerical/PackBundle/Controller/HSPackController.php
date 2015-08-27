@@ -10,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class HSPackController extends Controller
@@ -57,6 +56,19 @@ class HSPackController extends Controller
      */
     public function savePackAction(Request $request)
     {
+
+        $this->savePack($request);
+        return new JsonResponse(
+            array(
+                'success' => true,
+                'url' => $this->generateUrl('hspack_detail',array('pack'=>0))
+            )
+        );
+
+    }
+
+    private function savePack($request)
+    {
         if($request->request->get('id')){
             $em = $this->getDoctrine()->getManager();
 
@@ -83,28 +95,18 @@ class HSPackController extends Controller
                 $pack = $this->addCardToPack($request->request->get('card4'), $pack, $request->request->has('goldenc4'));
                 $this->addCardToPack($request->request->get('card5'), $pack, $request->request->has('goldenc5'));
 
-
                 $em->flush();
-                return new JsonResponse(
-                    array(
-                        'success' => true,
-                        'url' => $this->generateUrl('hspack_detail',array('pack'=>0))
-                    )
-                );
-                //return $this->redirectToRoute('hspack_detail',array('pack'=>0));
-
-
+                return $pack;
             }
-
 
         }else{
             //Throw error
             throw new NotFoundHttpException("Pack not found");
         }
-
     }
 
-    private function addCardToPack($cardname, HSPack $pack, $golden = false) {
+    private function addCardToPack($cardname, HSPack $pack, $golden = false)
+    {
         $em = $this->getDoctrine()->getManager();
         $card = $this->getDoctrine()->getRepository('ListericalPackBundle:HSCard')->find($cardname);
 
